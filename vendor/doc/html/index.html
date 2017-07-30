@@ -1,0 +1,518 @@
+<!doctype html>
+<html class="no-js" lang="">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title></title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="prism/prism.css">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	</head>
+	<body>
+
+		<br>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="panel-group" id="accordion">
+						
+						<!-- Walidacja -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+									Walidacja
+								</a>
+								</h2>
+							</div>
+							<div id="collapse1" class="panel-collapse collapse">
+								<div class="panel-body">
+<h4>Podniesienie klasy</h4>
+<pre class="language-php"><code>$validate = new Validate;</code></pre>
+
+
+<hr>
+
+<h4>Metoda test</h4>
+<p class="highlight">
+	@param - @value - metody do zwalidowania<br>
+	<b>@return - array</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>$field = [
+	'pesel' => $validate->pesel('87031604153'),
+	'kod' => $validate->custom('04-218', '/^[0-9]{2}-[0-9]{3}$/')
+];
+
+var_dump( $validate->test($field) );
+//zwraca tablicę array(0){}
+//jeżeli wystąpiło by błędne pole zwróciłby array(1) { ["kod"]=> bool(false) }
+</code></pre>
+
+<hr>
+
+<h4>Pole tekstowe</h4>
+<p class="highlight">
+	@param - treść do zwalidowania<br>
+	@param - minimalna długość treści<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>var_dump( $validate->text('qwekk', 10) );</code></pre>
+
+<hr>
+
+<h4>Pole custom</h4>
+<p class="highlight">
+	@param - treść do zwalidowania<br>
+	@param - regex pattern<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>var_dump( $validate->custom('01-100, '/^[0-9]{2}-[0-9]{3}$/') );</code></pre>
+<div class="clearfix"></div>
+<pre class="language-php"><code>//Kod pocztowy
+$validate->custom('01-100, '/^[0-9]{2}-[0-9]{3}$/');
+</code></pre>
+
+<hr>
+
+<h4>Pole email</h4>
+<p class="highlight">
+	@param - adres email<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>var_dump( $validate->email('mail@mail.com') );</code></pre>
+
+<hr>
+
+<h4>Pole telefon</h4>
+<p class="highlight">
+	@param - numer telefonu<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>var_dump( $validate->phone('+888444555') );</code></pre>
+
+<hr>
+
+<h4>Pole telefon</h4>
+<p class="highlight">
+	@param - numer telefonu<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>var_dump( $validate->phone('+888444555') );</code></pre>
+
+<hr>										
+
+<h4>Pole data</h4>
+<p>
+	Sprawdza czy podana data zgadza się z formatem <span class="label label-default">dd [ / - . ] mm [ / - . ] yyyy</span><br>
+	Jeśli format się zgadza sprawdza czy podana data faktycznie istnieje <span class="label label-default">30/02/2000  = false</span>
+</p>
+<p class="highlight">
+	@param - data<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>var_dump( $validate->date('25/02/1998') );</code></pre>
+
+<hr>
+
+<h4>Pole wiek</h4>
+<p>
+	Sprawdza czy od podanej daty upłynoł wskazany czas<br>
+	+xx - czy upłyneło więcej niż xx lat<br>
+	-xx - czy upłyneło mniej niż xx lat<br>
+	=xx - czy upłyneło dokładnie xx lat
+</p>
+<p class="highlight">
+	@param - data<br>
+	@param - (+|-|=) wiek<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>var_dump( $validate->year('25/02/1999', '+18') );</code></pre>
+
+<hr>
+
+<h4>Pole pesel</h4>
+<p>
+	Sprawdza poprawność numeru PESEL
+</p>
+<p class="highlight">
+	@param - sting: 11 cyfrowy numer pesel<br>
+	@param - true/false: domyślnie false - jeżeli true zwraca tablicę z datą urodzenia, wiekiem, płcią<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>var_dump( $validate->pesel('46120803514') );</code></pre>
+
+<div class="clearfix"></div>
+<br>
+<pre class="language-php"><code>var_dump( $validate->pesel('46120803514', true) );
+
+//Zwraca
+Array
+(
+	[status] => true
+	[birth_day] => 2002-07-19
+	[age] => 14
+	[sex] => k
+)
+</code></pre>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- CSV -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+									CSV
+								</a></h2>
+							</div>
+							<div id="collapse2" class="panel-collapse collapse">
+								<div class="panel-body">
+<h4>Podniesienie klasy</h4>
+<pre class="language-php"><code>$csv = new Csv;</code></pre>
+
+<hr>
+
+<h4>Zapis danych</h4>
+<p class="highlight">
+	@param - string : nazwa pliku csv<br>
+	@param - array : tablica danych które mają zostać zapisan w pliku CSV<br>
+	@param - true/false default = false : czy dane z tablicy mają zostać zapisane razem z kluczami tablicy<br>
+	@param - true/false default = true: czy plik CSV ma zostać zapisany z BOM<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>$csv->save( $file_name, $data_array, $key = true/false, $bom = true/false );</code></pre>
+
+<hr>
+
+<h4>Przykład implementacji</h4>
+<pre class="language-php"><code>$csv = new Csv;
+
+$data = [
+	'id' => '1',
+	'imie' => 'Jan',
+	'nazwisko' => 'Kowalski'
+];
+
+$csv->save( 'test.csv', $data);
+</code></pre>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- Mail -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+									Mail
+								</a></h2>
+							</div>
+							<div id="collapse3" class="panel-collapse collapse">
+								<div class="panel-body">
+<h4>Konfiguracja</h4>
+<p>Konfiguracja poczty znajduje się w pliku <span class="badge badge-default">config.php</span> w sekcji PHPMailer.</p>
+
+<hr>
+
+<h4>Podniesienie klasy</h4>
+<pre class="language-php"><code>$mail = new Mail;</code></pre>
+
+<hr>
+
+<h4>Wysyłka</h4>
+<p class="highlight">
+	@param - array<br>
+	<b>@return - true/false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>$mail->smtp( $data );</code></pre>
+
+<hr>
+
+<h4>Przykład implementacji</h4>
+<pre class="language-php"><code>$data = [
+
+	'nadawca_imie' => '',
+	'odpowiedz' => '', //opcjonalnie
+	'odpowiedz_imie' => '', //opcjonalnie
+	'odbiorca' => '',
+	'odbiorca_imie' => '',
+	'tytul' => '',
+	'tresc' => '',
+];
+
+$mail = new Mail;
+$mail->smtp( $data );
+</code></pre>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- Logs -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+									Logs
+								</a></h2>
+							</div>
+							<div id="collapse4" class="panel-collapse collapse">
+								<div class="panel-body">
+<h4>Podniesienie klasy</h4>
+<pre class="language-php"><code>$logs = new Logs;</code></pre>
+
+<hr>
+
+<h4>Metoda - txt</h4>
+<p class="highlight">
+	@param - string: nazwa pliku<br>
+	@param - string: treść danych do zapisania<br>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>$logs->txt( $file, $data );</code></pre>
+
+<hr>
+
+<h4>Przykład implementacji</h4>
+<pre class="language-php"><code>$logs = new Logs;
+$logs->txt( 'test.txt', 'Dane do zapisania w pliku txt' );
+</code></pre>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- DB -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse5">
+									DB (CRUD)
+								</a></h2>
+							</div>
+							<div id="collapse5" class="panel-collapse collapse">
+								<div class="panel-body">
+<h4>Konfiguracja</h4>
+<p>Konfiguracja bazy znajduje się w pliku <span class="badge badge-default">config.php</span> w sekcji DATABASE.</p>
+
+<hr>
+
+<h4>Podniesienie klasy</h4>
+<pre class="language-php"><code>$db = new Db;</code></pre>
+
+<hr>
+
+<h4>Create</h4>
+<p class="highlight">
+	@param - string: Nazwa tabeli w bazie danych<br>
+	@param - array: Dane do zapisania w tabeli<br>
+	<b>@return - id zapisanej pozycji / false</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>$data = [
+	'imie' => 'Jan',
+	'nazwisko' => 'Kowalski',
+	'telefon' => '888888888',
+];
+
+$db = new Db;<br>
+$db->create( 'nazwa_tabeli', $data );
+</code></pre>
+
+
+<hr>
+
+<h4>Read</h4>
+<p class="highlight">
+	@param - string: Nazwa tabeli w bazie danych<br>
+	<b>@return - array: Wszystkie rekordy z tabeli</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>$db = new Db;
+$db->read( 'nazwa_tabeli' );
+</code></pre>
+
+
+<hr>
+
+<h4>Where</h4>
+<p class="highlight">
+	@param - string: Nazwa tabeli w bazie danych<br>
+	@param - array: Zapytanie SQL, klucz to nazwa tabeli value to wartość<br>
+	<b>@return - array: Wszystkie rekordy z tabeli</b>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>// Stworzy zapytanie " SELECT * FROM `nazwa_tabeli` WHERE imie=`Jan` AND miasto=`Warszawa` "
+$data = [
+	'imie' => 'Jan',
+	'miasto' => 'Warszawa',
+];
+
+$db = new Db;
+$db->where( 'nazwa_tabeli', $data );
+</code></pre>
+
+
+<hr>
+
+<h4>Update</h4>
+<p class="highlight">
+	@param - string: Nazwa tabeli w bazie danych<br>
+	@param - array: Dane do zapisania w tabeli<br>
+	@param - array: Zapytanie SQL, klucz to nazwa tabeli value to wartość<br>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>// Stworzy zapytanie " UPDATE `nazwa_tabeli` SET imie=`Jan` miasto=`Warszawa` WHERE id=`4` "
+$data = [
+	'imie' => 'Jan',
+	'miasto' => 'Warszawa',
+];
+
+$where = [
+	'id' => '4',
+];	
+
+$db = new Db;<br>
+$db->update( 'nazwa_tabeli', $data, $where );	
+</code></pre>
+
+
+<hr>
+
+<h4>Delete</h4>
+<p class="highlight">
+	@param - string: Nazwa tabeli w bazie danych<br>
+	@param - array: Zapytanie SQL, klucz to nazwa tabeli value to wartość<br>
+</p>
+<div class="clearfix"></div>
+<pre class="language-php"><code>// Stworzy zapytanie " DELETE FROM `nazwa_tabeli` WHERE id=`4` "
+$where = [
+	'id' => '4',
+];	
+
+$db = new Db;
+$db->delete( 'nazwa_tabeli', $where );	
+</code></pre>
+
+								</div>
+							</div>
+						</div>
+
+
+						<!-- Auth -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h2 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse6">
+									Autoryzacja
+								</a></h2>
+							</div>
+							<div id="collapse6" class="panel-collapse collapse">
+								<div class="panel-body">
+<h4>Konfiguracja</h4>
+<p>
+	Podstawowa konfiguracja znajduje się w pliku <span class="badge">config.php</span>
+</p>
+<p>
+	Plik <span class="badge">login.php</span> który znajduje się w folderze auth najlepiej umieścić w głównym folderze aplikacji. W pliku trzeba zmienić wartość zmiennej $assets_dir - odpowiada ona za linkowanie do styli i grafik.
+</p>
+
+<hr>
+
+<h4>Podniesienie klasy</h4>
+<p><strong>$url_formularza</strong> - (opcjonalnie) zmienna wskazująca plik z formularzem, nadpisuje adres który znajduje się w pliku config.php</p>
+<pre class="language-php"><code>$auth = new Auth( $url_formularza );</code></pre>
+
+<hr>
+
+<h4>Sprawdzanie zalogowania</h4>
+<pre class="language-php"><code>$auth = new Auth;
+$auth->is_logged(); // zwróci true/false
+
+// przykład wykorzystania
+if ( $auth->is_logged() ) {
+	echo 'Jesteś zalogowany';
+}
+</code></pre>
+
+<hr>
+
+<h4>Przekierowanie na formularz logowania</h4>
+<p>
+	<strong>$redirect</strong> - (opcjonalnie) zmienna wskazuje plik na który ma być przekierowanie po poprawnym zalogowaniu nadpisuje adres z pliku confog.php<br>
+	<strong>$form_file</strong> - (opcjonalnie) zmienna wskazująca plik z formularzem, nadpisuje adres który znajduje się w pliku config.php
+</p>
+<pre class="language-php"><code>$auth = new Auth;
+$auth->login_form( $redirect, $form_file );
+
+// przykład wykorzystania
+// sprawdzenie czy użytkownik jest zalogowany, jeśli tak wyswietla tekst, jeśli nie przekierowuje na stronę logowania
+if( !$auth->is_logged() ) {
+	$auth->login_form('strona_po_zalogowaniu.php'); 
+}
+else {
+	echo 'ZALOGOWANY';
+}
+</code></pre>
+
+<hr>
+
+<h4>Wylogowywanie</h4>
+<p>
+	<strong>logout()</strong> - wylogowuje użytkownika<br>
+	<strong>$url</strong> - parametr opcjonalny, wyświetla link do strony wylogowania
+	<strong>$redirect</strong> - parametr opcjonalny, link do przekierowania po wylogowaniu / jeśli false to domyślny
+	<strong>$class</strong> - parametr opcjonalny, klasy elementu &lt;a>
+</p>
+<pre class="language-php"><code>$auth = new Auth;
+$auth->logout($url, $redirect, $class);
+
+//przykład wykorzystania
+$auth->logout(true, false, 'btn btn-primary');
+</code></pre>
+
+
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<br><br><br><br>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>       
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="prism/prism.js"></script>
+	
+		<script>
+			$('body').scrollspy({
+				target: '.bs-docs-sidebar',
+				offset: 40
+			});
+		</script>
+	</body>
+</html>
